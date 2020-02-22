@@ -28,6 +28,7 @@ public class Recv extends AppCompatActivity {
 
         returnButton =  findViewById(R.id.returnButton);
         fileListView = findViewById(R.id.filesListView);
+        files = new ArrayList<>();
 
         returnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -48,7 +49,7 @@ public class Recv extends AppCompatActivity {
             System.out.println(f.getName());
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, files);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Recv.this, android.R.layout.simple_list_item_1, files);
         fileListView.setAdapter(arrayAdapter);
     }
 }
