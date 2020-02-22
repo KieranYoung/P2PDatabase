@@ -37,8 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService" >
-        </service>
+        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService" ></service>
+        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NearbyServiceSend" ></service>
+        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NearbyServiceReceive" ></service>
     </application>
 
 </manifest>
