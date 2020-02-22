@@ -1,6 +1,5 @@
 package com.example.p2pdatabase.com.example.p2pdatabase.services;
 
-import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -20,19 +19,20 @@ public class NotificationService extends Service {
     private int notificationId;
     private final IBinder mBinder = new NotificationServiceBinder();
 
+    public NotificationService() {
+    }
 
-    public NotificationService(String name) {
-        notificationId = 0;
+    @Override
+    public void onCreate() {
         setupP2PNotificationChannel();
-        postMessage("MEEP MOOP", "I AM YOINK, THE MOST EPIC SUPERHERO EVER...FIGHT ME", 5);
+        super.onCreate();
     }
 
     public class NotificationServiceBinder extends Binder {
-        NotificationService getService() {
+        public NotificationService getService() {
             return NotificationService.this;
         }
     }
-
 
     @Nullable
     @Override
@@ -52,11 +52,6 @@ public class NotificationService extends Service {
         notificationId++;
 
         return mBinder;
-    }
-
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        return Service.START_STICKY;
     }
 
     private void postMessage(String title, String content, int priority){
@@ -83,6 +78,5 @@ public class NotificationService extends Service {
         }
 
     }
-
 
 }
