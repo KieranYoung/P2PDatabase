@@ -2,38 +2,48 @@ package com.example.p2pdatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ComponentName;
-import android.content.Context;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 
 import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService;
-import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationServiceConnection;
 
 public class MainActivity extends AppCompatActivity {
 
-    NotificationServiceConnection connection;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this, NotificationService.class);
-        connection = new NotificationServiceConnection();
+
+        setupP2PNotificationChannel();
 
         String title = "YEEEEEET!";
         String content = "BeepBop";
         int priority = 5;
 
-        intent.putExtra("TITLE", title);
-        intent.putExtra("CONTENT", content);
-        intent.putExtra("PRIORITY", priority);
+        for(int i = 1; i <= 100; i++){
+            System.out.println("AIJSDGHOUASGDUKHGASVGFDGHYSAVDGHY ASDGJFH DGFHVCAGFHJSDASJGHFDCVSAGFHJDCVASGFJDCASFCDGSFADCSAFGD " + i);
+            Intent intent = NotificationService.setupNotificationWithProgressBar(title, content, priority, (i) ,1, this);
+            startService(intent);
+        }
 
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
 
-        //startService(new Intent(this, NotificationService.class));
+    private void setupP2PNotificationChannel(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.NOTIFICATION_CHNL_ID);
+            String description = getString(R.string.NOTIFICATION_CHNL_DESCRIP);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(getString(R.string.NOTIFICATION_CHNL_ID), name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
     }
 
 }

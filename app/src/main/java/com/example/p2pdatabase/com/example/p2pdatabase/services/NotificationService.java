@@ -1,8 +1,10 @@
 package com.example.p2pdatabase.com.example.p2pdatabase.services;
 
+import android.app.IntentService;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
@@ -14,69 +16,69 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.p2pdatabase.R;
 
-public class NotificationService extends Service {
+import java.util.Random;
 
-    private int notificationId;
-    private final IBinder mBinder = new NotificationServiceBinder();
+public class NotificationService extends IntentService {
 
     public NotificationService() {
+        super("notification");
     }
 
     @Override
     public void onCreate() {
-        setupP2PNotificationChannel();
         super.onCreate();
     }
 
-    public class NotificationServiceBinder extends Binder {
-        public NotificationService getService() {
-            return NotificationService.this;
-        }
+    public static Intent setupNotificationWithNoProgressBar(String title, String content, int priority, Context context){
+
+        Intent intent = new Intent(context, NotificationService.class);
+
+        intent.putExtra("TITLE", title);
+        intent.putExtra("CONTENT", content);
+        intent.putExtra("PRIORITY", priority);
+        intent.putExtra("TRANSFER_PROG", -1);
+
+        return intent;
     }
 
-    @Nullable
+    public static Intent setupNotificationWithProgressBar(String title, String content, int priority, int percentage, int notificationId, Context context){
+
+        Intent intent = new Intent(context, NotificationService.class);
+
+        intent.putExtra("NOTIFICATION_ID", notificationId);
+        intent.putExtra("TITLE", title);
+        intent.putExtra("CONTENT", content);
+        intent.putExtra("PRIORITY", priority);
+        intent.putExtra("TRANSFER_PROG", percentage);
+
+        return intent;
+    }
+
     @Override
-    public IBinder onBind(Intent intent) {
-
-        String title = intent.getStringExtra("TITLE");
-        String content = intent.getStringExtra("CONTENT");
-        int priority = intent.getIntExtra("PRIORITY", 4);
-
-        if(title == null){
-            throw new RuntimeException("No Notification Title Set!");
-        } else if (content == null){
-            throw new RuntimeException("No Notification Content Set!");
-        }
-
-        postMessage(title, content, priority);
-        notificationId++;
-
-        return mBinder;
+    protected void onHandleIntent(@Nullable Intent intent) {
+        postMessage(intent);
     }
 
-    private void postMessage(String title, String content, int priority){
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, this.getResources().getString(R.string.NOTIFICATION_CHNL_ID))
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle(title)
-                .setContentText(content)
-                .setPriority(priority);
-        notificationManager.notify(notificationId, builder.build());
-    }
+    private void postMessage(Intent intent){
 
-    private void setupP2PNotificationChannel(){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.NOTIFICATION_CHNL_ID);
-            String description = getString(R.string.NOTIFICATION_CHNL_DESCRIP);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(getString(R.string.NOTIFICATION_CHNL_ID), name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+        if(intent.getIntExtra("TRANSFER_PROG", -1) != -1){
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, this.getResources().getString(R.string.NOTIFICATION_CHNL_ID))
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(intent.getStringExtra("TITLE"))
+                    .setContentText(intent.getStringExtra("CONTENT"))
+                    .setPriority(intent.getIntExtra("PRIORITY", 4))
+                    .setProgress(100, intent.getIntExtra("TRANSFER_PROG", 0), false);
+            notificationManager.notify(intent.getIntExtra("NOTIFICATION_ID", 0), builder.build());
+        } else {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, this.getResources().getString(R.string.NOTIFICATION_CHNL_ID))
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(intent.getStringExtra("TITLE"))
+                    .setContentText(intent.getStringExtra("CONTENT"))
+                    .setPriority(intent.getIntExtra("PRIORITY", 4));
+            notificationManager.notify(new Random().nextInt(), builder.build());
         }
-
     }
 
 }
