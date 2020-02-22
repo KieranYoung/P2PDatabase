@@ -7,15 +7,23 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService;
 
+import compression.Compress;
+
 public class MainActivity extends AppCompatActivity {
+    Button recieveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Compress.createDirectories();
+
+        recieveButton = findViewById(R.id.recv);
 
         setupP2PNotificationChannel();
 
@@ -28,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = NotificationService.setupNotificationWithProgressBar(title, content, priority, (i) ,1, this);
             startService(intent);
         }
+
+        recieveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                Intent myIntent = new Intent(MainActivity.this, Recv.class);
+                startActivity(myIntent);
+            }
+        });
 
     }
 
