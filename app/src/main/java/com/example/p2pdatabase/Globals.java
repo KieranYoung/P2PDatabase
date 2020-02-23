@@ -1,6 +1,10 @@
 package com.example.p2pdatabase;
 
-public class Globals {
+import android.app.Application;
+
+import sqlite.SQL;
+
+public class Globals extends Application{
     public static ConnectionClient CClient = new ConnectionClient();
 
     enum Mode
@@ -17,4 +21,8 @@ public class Globals {
     public static Mode getMode() {
         return mode;
     }
+
+    public static SQL sql;
+
+    public static long android_id;
 }

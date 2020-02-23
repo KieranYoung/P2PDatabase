@@ -3,6 +3,7 @@ package com.example.p2pdatabase;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -11,10 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
+import android.provider.Settings.Secure;
 import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService;
 
+import androidx.core.app.ActivityCompat;
 import compression.Compress;
+import sqlite.SQL;
 
 public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 168876;
@@ -26,6 +29,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                42609);
+
+
+        Globals.android_id = Long.parseLong(Secure.getString(MainActivity.this.getContentResolver(),
+                Secure.ANDROID_ID).substring(0, 14), 16);
+        Globals.sql = new SQL(Globals.android_id, MainActivity.this);
+
+        Globals.CClient.setContext(MainActivity.this);
+        Globals.CClient.startDiscovery();
+        Globals.CClient.startAdvertise();
 
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -84,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
 
         recieveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
+                //stop looking and sending while we change contexts
+                Globals.CClient.stopDiscovery();
+                Globals.CClient.stopAdvert();
+                Globals.CClient.disconnect();
+
                 Intent myIntent = new Intent(MainActivity.this, Recv.class);
                 startActivity(myIntent);
             }
