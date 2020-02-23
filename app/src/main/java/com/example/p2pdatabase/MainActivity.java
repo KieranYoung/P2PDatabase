@@ -8,12 +8,21 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import compression.Compress;
 
@@ -22,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102421;
     Button recieveButton;
     Button sendButton;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -45,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -62,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             // app-defined int constant that should be quite unique
 
         }
-
-
 
         Compress.createDirectories();
 
@@ -92,11 +99,63 @@ public class MainActivity extends AppCompatActivity {
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                Intent myIntent = new Intent(MainActivity.this, Sender.class);
-                startActivity(myIntent);
+                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent, 7);
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case 7:
+                if(resultCode==RESULT_OK){
+                    InputStream is = null;
+                    OutputStream os = null;
+                    try {
+                        is = getContentResolver().openInputStream(data.getData());
+                        String name = getFileName(data.getData());
+                        System.out.println(Compress.inPath + name);
+                        File file = new File(Compress.inPath + '/' + name);
+                        os = new FileOutputStream(file);
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = is.read(buffer)) > 0) {
+                            System.out.println(buffer);
+                            os.write(buffer);
+                        }
+                        is.close();
+                        os.close();
+                    } catch (Exception e) {
+
+                    }
+                }
+                break;
+        }
+    }
+
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
     }
 
     private void setupP2PNotificationChannel(){

@@ -43,7 +43,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Sender"></activity>
         <activity android:name=".Recv" />
         <activity
             android:name=".MainActivity"
