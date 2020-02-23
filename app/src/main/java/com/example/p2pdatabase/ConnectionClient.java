@@ -162,9 +162,10 @@ public class ConnectionClient {
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo discoveredEndpointInfo) {
                     // We may want to make opponentList a list of key value pairs later
                     // (key = endpointId, value = discoveredEndpointInfo)
-                    connect(endpointId);
                     Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
                     toast.show();
+                    connect(endpointId);
+
                 }
 
                 @Override
