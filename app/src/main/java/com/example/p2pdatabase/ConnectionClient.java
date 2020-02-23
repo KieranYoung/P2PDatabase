@@ -23,7 +23,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -141,16 +145,33 @@ public class ConnectionClient {
 
         ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
         for (File s: files) {
-            System.out.println(Compress.inPath +"/"+ s.getName());
-            s.renameTo(new File(Compress.inPath +"/"+ s.getName()));
+            InputStream is = null;
+            OutputStream os = null;
+            try {
+                File file = new File(s.getPath());
+                File newFile = new File(Compress.inPath + '/' + s.getName());
+                is = new FileInputStream(file);
+                os = new FileOutputStream(newFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) > 0) {
+                    System.out.println(buffer);
+                    os.write(buffer);
+                }
+                is.close();
+                os.close();
+            } catch (Exception e) {
 
+            }
         }
 
         File ass = new File(Compress.inPath);
+        System.out.println("About to brint doofus llooooook herereererererer");
         for (File f: ass.listFiles()) {
-            System.out.println("GAY BOI BOI");
+            System.out.println("hey");
             System.out.println(f.getName());
         }
+
         Compress.zipAll();
 
         File fileToSend = new File(Compress.outPath); // sets file to send as the zipped folder
