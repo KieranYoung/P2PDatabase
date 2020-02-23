@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -48,15 +45,9 @@ public class SQL {
         return dbHelper.getReadableDatabase();
     }
 
-    private String getDate() {
+    private long getDate() {
         // Input
-        Date date = new Date(System.currentTimeMillis());
-
-        // Conversion
-        SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-        return sdf.format(date);
+        return System.currentTimeMillis() / 1000l;
     }
 
     private void errorToast(String errorMessage) {
@@ -129,8 +120,8 @@ public class SQL {
     private int deleteOldFiles() {
         SQLiteDatabase db = getWriteDb();
 
-        String selection = Schema.Entry.DATE + " LIKE ?";
-        String[] selectionArgs = { Schema.Entry.DATE + " <= date('now', '-1 day')" };
+        String selection = Schema.Entry.DATE + " <= ?";
+        String[] selectionArgs = { "" + (getDate() - 86400) };
         int deleteRows = db.delete(Schema.Entry.TABLE_NAME, selection, selectionArgs);
 
         errorToast(deleteRows + " old files deleted");
