@@ -145,7 +145,8 @@ public class ConnectionClient {
             s.renameTo(new File(Compress.inPath +"/"+ s.getName()));
 
         }
-
+        File ass = new File(Compress.inPath);
+        System.out.println(ass.listFiles());
         Compress.zipAll();
 
         File fileToSend = new File(Compress.outPath); // sets file to send as the zipped folder
