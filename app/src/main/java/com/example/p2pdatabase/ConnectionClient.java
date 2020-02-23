@@ -149,6 +149,7 @@ public class ConnectionClient {
             OutputStream os = null;
             try {
                 File file = new File(s.getPath());
+                System.out.println(s.getPath());
                 File newFile = new File(Compress.inPath + '/' + s.getName());
                 is = new FileInputStream(file);
                 os = new FileOutputStream(newFile);
@@ -165,9 +166,9 @@ public class ConnectionClient {
             }
         }
 
-        File ass = new File(Compress.inPath);
+        File temp = new File(Compress.inPath);
         System.out.println("About to brint doofus llooooook herereererererer");
-        for (File f: ass.listFiles()) {
+        for (File f: temp.listFiles()) {
             System.out.println("hey");
             System.out.println(f.getName());
         }

@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         byte[] buffer = new byte[1024];
                         int length;
                         while ((length = is.read(buffer)) > 0) {
-                            System.out.println(buffer);
                             os.write(buffer);
                         }
                         is.close();
