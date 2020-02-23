@@ -36,7 +36,7 @@ public class ConnectionClient {
     // A value that uniquely identifies the app. Used for multiplayer functionality
     public String getServiceId() {return "P2PDatabase.Telephone";}
 
-    private String Usern = "anonymous";
+    private String Usern = "anoasdplkasnymous";
 
     private Context C;
 
@@ -44,7 +44,7 @@ public class ConnectionClient {
         Nearby.getConnectionsClient(C).startDiscovery(
                 getServiceId(),
                 mEndpointDiscoveryCallback,
-                new DiscoveryOptions(Strategy.P2P_CLUSTER))
+                new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT))
                 .addOnSuccessListener(
                         new OnSuccessListener<Void>() {
                             @Override
@@ -73,9 +73,9 @@ public class ConnectionClient {
 
         Nearby.getConnectionsClient(C).startAdvertising(
                 Usern,
-                "P2Pdatabase.Telephone", // serviceId
+                getServiceId(), // serviceId
                 mConnectionLifecycleCallback,
-                new AdvertisingOptions(Strategy.P2P_CLUSTER))//multiple people are connected
+                new AdvertisingOptions(Strategy.P2P_POINT_TO_POINT))//multiple people are connected
                 .addOnSuccessListener(
                         new OnSuccessListener<Void>() {
                             @Override
@@ -155,25 +155,31 @@ public class ConnectionClient {
             Log.e("P2PDataBase", "File not found", e);
         }
     }
+    private final EndpointDiscoveryCallback mEndpointDiscoveryCallback;
 
-    private final EndpointDiscoveryCallback mEndpointDiscoveryCallback =
-            new EndpointDiscoveryCallback() {
-                @Override
-                public void onEndpointFound(String endpointId, DiscoveredEndpointInfo discoveredEndpointInfo) {
-                    // We may want to make opponentList a list of key value pairs later
-                    // (key = endpointId, value = discoveredEndpointInfo)
-                    Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
-                    toast.show();
-                    connect(endpointId);
+    ConnectionClient(){
+        System.out.println("asdkljfaslkdjaslkdjfa");
+        mEndpointDiscoveryCallback =
+                new EndpointDiscoveryCallback() {
+                    @Override
+                    public void onEndpointFound(String endpointId, DiscoveredEndpointInfo discoveredEndpointInfo) {
+                        // We may want to make opponentList a list of key value pairs later
+                        // (key = endpointId, value = discoveredEndpointInfo)
+                        Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
+                        toast.show();
+                        connect(endpointId);
 
-                }
+                    }
 
-                @Override
-                public void onEndpointLost(String endpointId) {
-                    Toast toast = Toast.makeText(C, "Lost Friend", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            };
+                    @Override
+                    public void onEndpointLost(String endpointId) {
+                        Toast toast = Toast.makeText(C, "Lost Friend", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                };
+    }
+
+
 
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
