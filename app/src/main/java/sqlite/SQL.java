@@ -139,7 +139,6 @@ public class SQL {
         SQLiteDatabase db = getReadDb();
 
         String[] projection = {
-                BaseColumns._ID,
                 Schema.Entry.ANDROID_ID,
                 Schema.Entry.DATE,
                 Schema.Entry.FILE
