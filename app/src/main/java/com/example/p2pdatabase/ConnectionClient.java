@@ -169,6 +169,8 @@ public class ConnectionClient {
 
                 @Override
                 public void onEndpointLost(String endpointId) {
+                    Toast toast = Toast.makeText(C, "Lost Friend", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             };
 
