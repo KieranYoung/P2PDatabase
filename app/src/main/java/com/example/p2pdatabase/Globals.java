@@ -5,7 +5,7 @@ import android.app.Application;
 import sqlite.SQL;
 
 public class Globals extends Application{
-    public static ConnectionClient CClient = new ConnectionClient();
+    public static ConnectionClient CClient;
 
     enum Mode
     {

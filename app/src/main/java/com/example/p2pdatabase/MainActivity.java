@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE},
                 42609);
 
 
@@ -51,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
                 Secure.ANDROID_ID).substring(0, 14), 16);
         Globals.sql = new SQL(Globals.android_id, MainActivity.this);
 
+        Globals.CClient = new ConnectionClient();
         Globals.CClient.setContext(MainActivity.this);
-        Globals.CClient.startDiscovery();
-        Globals.CClient.startAdvertise();
+
 
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
             // app-defined int constant that should be quite unique
-
         }
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -194,6 +195,12 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
 
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        Globals.CClient.startDiscovery();
+        Globals.CClient.startAdvertise();
     }
 
 }

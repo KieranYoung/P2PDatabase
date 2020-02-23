@@ -51,7 +51,7 @@ public class SQL {
     }
 
     private void errorToast(String errorMessage) {
-        Toast.makeText(context, errorMessage, LENGTH_LONG).show();
+        //Toast.makeText(context, errorMessage, LENGTH_LONG).show();
 
     }
 

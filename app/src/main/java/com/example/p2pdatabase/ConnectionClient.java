@@ -2,6 +2,7 @@ package com.example.p2pdatabase;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -43,13 +44,13 @@ public class ConnectionClient {
         Nearby.getConnectionsClient(C).startDiscovery(
                 getServiceId(),
                 mEndpointDiscoveryCallback,
-                new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT))
+                new DiscoveryOptions(Strategy.P2P_CLUSTER))
                 .addOnSuccessListener(
                         new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unusedResult) {
                                 // We're discovering!
-                                //Toast.makeText(c, "discovering", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(C, "discovering", Toast.LENGTH_SHORT).show();
                             }
                         })
                 .addOnFailureListener(
@@ -57,7 +58,7 @@ public class ConnectionClient {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 // We were unable to start discovering.
-                                //Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(C, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
     }
@@ -79,8 +80,8 @@ public class ConnectionClient {
                         new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unusedResult) {
-                                //Toast toast = Toast.makeText(c, "Successful Advert", Toast.LENGTH_SHORT);
-                                //toast.show();
+                                Toast toast = Toast.makeText(C, "Successful Advert", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                         })
 
@@ -88,8 +89,8 @@ public class ConnectionClient {
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-//                            Toast toast = Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT);
-//                            toast.show();
+                                Toast toast = Toast.makeText(C, e.getMessage(), Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                         });
     }
@@ -97,9 +98,7 @@ public class ConnectionClient {
         Nearby.getConnectionsClient(C).stopAdvertising();
     }
 
-    public void setContext(Context c){
-        C = c;
-    }
+    public void setContext(Context c){ C = c;}
 
     public void connect(String e){
         Nearby.getConnectionsClient(C).requestConnection("swag", e, mConnectionLifecycleCallback)
@@ -124,8 +123,6 @@ public class ConnectionClient {
     public void disconnect(){
         Nearby.getConnectionsClient(C).stopAllEndpoints();
         ConnectedEndpointIDs = new ArrayList<String>();
-        startDiscovery();
-        startAdvertise();
     }
 
 
@@ -152,6 +149,8 @@ public class ConnectionClient {
             Payload filePayload = Payload.fromFile(fileToSend); //sets the payload to be the file
             Nearby.getConnectionsClient(C).sendPayload(ConnectedEndpointIDs.get(i), filePayload); // sends the payload
             fileToSend.delete();
+            Toast toast = Toast.makeText(C, "Sent!", Toast.LENGTH_SHORT);
+            toast.show();
         } catch (FileNotFoundException e) {
             Log.e("P2PDataBase", "File not found", e);
         }
