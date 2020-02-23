@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         Globals.CClient = new ConnectionClient();
         Globals.CClient.setContext(MainActivity.this);
 
-
-
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 

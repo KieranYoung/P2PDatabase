@@ -148,11 +148,10 @@ public class ConnectionClient {
             InputStream is = null;
             OutputStream os = null;
             try {
-                File file = new File(s.getPath());
-                File newFile = new File(Compress.inPath + '/' + s.getName());
+                File file = new File(Compress.inPath + '/' + s.getName());
                 System.out.println(Compress.inPath + '/' + s.getName());
-                is = new FileInputStream(file);
-                os = new FileOutputStream(newFile);
+                is = new FileInputStream(s);
+                os = new FileOutputStream(file);
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = is.read(buffer)) > 0) {
