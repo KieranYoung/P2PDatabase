@@ -141,7 +141,8 @@ public class ConnectionClient {
 
         ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
         for (File s: files){
-            s.renameTo(new File(Compress.inPath + s.getName()));
+            System.out.println(Compress.inPath +"/"+ s.getName());
+            s = new File(Compress.inPath +"/"+ s.getName());
         }
 
         Compress.zipAll();
@@ -187,10 +188,10 @@ public class ConnectionClient {
             toast.show();
 
             Payload.File f = payload.asFile();
-
-            f.asJavaFile().renameTo(new File(Compress.outPath + f.asJavaFile().getName()));
+            File fnew = f.asJavaFile();
+            fnew = new File(Compress.outPath +"/"+ fnew.getName());
             Compress.unzipAll();
-            f.asJavaFile().delete();
+            fnew.delete();
 
             File[] fs = (new File(Compress.inPath).listFiles());
             if(fs!=null) { //some JVMs return null for empty dirs
