@@ -146,7 +146,7 @@ public class ConnectionClient {
 
         Compress.zipAll();
 
-        File fileToSend = new File(Compress.outPath, "data.zip"); // sets file to send as the zipped folder
+        File fileToSend = new File(Compress.outPath); // sets file to send as the zipped folder
 
 
         try {
@@ -159,37 +159,33 @@ public class ConnectionClient {
             Log.e("P2PDataBase", "File not found", e);
         }
     }
-    private final EndpointDiscoveryCallback mEndpointDiscoveryCallback;
+    private final EndpointDiscoveryCallback mEndpointDiscoveryCallback =
+            new EndpointDiscoveryCallback() {
+                @Override
+                public void onEndpointFound(String endpointId, DiscoveredEndpointInfo discoveredEndpointInfo) {
+                    // We may want to make opponentList a list of key value pairs later
+                    // (key = endpointId, value = discoveredEndpointInfo)
+                    Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
+                    toast.show();
+                    connect(endpointId);
 
-    ConnectionClient(){
-        System.out.println("asdkljfaslkdjaslkdjfa");
-        mEndpointDiscoveryCallback =
-                new EndpointDiscoveryCallback() {
-                    @Override
-                    public void onEndpointFound(String endpointId, DiscoveredEndpointInfo discoveredEndpointInfo) {
-                        // We may want to make opponentList a list of key value pairs later
-                        // (key = endpointId, value = discoveredEndpointInfo)
-                        Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
-                        toast.show();
-                        connect(endpointId);
+                }
 
-                    }
-
-                    @Override
-                    public void onEndpointLost(String endpointId) {
-                        Toast toast = Toast.makeText(C, "Lost Friend", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                };
-    }
+                @Override
+                public void onEndpointLost(String endpointId) {
+                    Toast toast = Toast.makeText(C, "Lost Friend", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            };
 
 
 
     private final PayloadCallback mPayloadCallback = new PayloadCallback() {
         @Override
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
-            //Toast toast1 = Toast.makeText(C,"got something", Toast.LENGTH_SHORT);
-            // toast1.show();
+            Toast toast = Toast.makeText(C, "Payload here", Toast.LENGTH_SHORT);
+            toast.show();
+
             Payload.File f = payload.asFile();
 
             f.asJavaFile().renameTo(new File(Compress.outPath + f.asJavaFile().getName()));
@@ -214,10 +210,10 @@ public class ConnectionClient {
         @Override
         public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
             String title = "Downloading FIle";
-            String content = "Progress: %" + (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes());
+            String content = "Progress: %" + (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes()+ 1);
             int priority = 5;
 
-            Intent newIntentService = NotificationService.updateProgressBarNotification((int)payloadTransferUpdate.getPayloadId(), title, content, priority, (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes()), C);
+            Intent newIntentService = NotificationService.updateProgressBarNotification((int)payloadTransferUpdate.getPayloadId(), title, content, priority, (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes() +1), C);
             C.startService(newIntentService);
 
         }
@@ -236,10 +232,11 @@ public class ConnectionClient {
                     switch (result.getStatus().getStatusCode()) {
                         case ConnectionsStatusCodes.STATUS_OK:
                             ConnectedEndpointIDs.add(endpointId);
-                            sendPayload(ConnectedEndpointIDs.size()- 1);
-
                             Toast toast = Toast.makeText(C, "Connected to Friend", Toast.LENGTH_SHORT);
                             toast.show();
+                            sendPayload(ConnectedEndpointIDs.size()- 1);
+
+
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                             // The connection was rejected by one or both sides.
