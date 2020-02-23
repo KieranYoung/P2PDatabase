@@ -1,9 +1,11 @@
 package com.example.p2pdatabase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -25,6 +27,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+
 import compression.Compress;
 
 
@@ -209,6 +213,13 @@ public class ConnectionClient {
 
         @Override
         public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
+            String title = "Downloading FIle";
+            String content = "Progress: %" + (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes());
+            int priority = 5;
+
+            Intent newIntentService = NotificationService.updateProgressBarNotification((int)payloadTransferUpdate.getPayloadId(), title, content, priority, (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes()), C);
+            C.startService(newIntentService);
+
         }
     };
 
