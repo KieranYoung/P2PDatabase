@@ -234,6 +234,8 @@ public class ConnectionClient {
                     fil.delete();
                 }
             }
+            startAdvertise();
+            startDiscovery();
         }
 
         @Override
@@ -260,6 +262,8 @@ public class ConnectionClient {
                 public void onConnectionResult(String endpointId, ConnectionResolution result) {
                     switch (result.getStatus().getStatusCode()) {
                         case ConnectionsStatusCodes.STATUS_OK:
+                            stopAdvert();
+                            stopDiscovery();
                             ConnectedEndpointIDs.add(endpointId);
                             Toast toast = Toast.makeText(C, "Connected to Friend", Toast.LENGTH_SHORT);
                             toast.show();
