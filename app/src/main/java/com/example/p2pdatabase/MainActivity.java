@@ -30,7 +30,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import compression.Compress;
-import sqlite.SQL;
 
 public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 168876;
@@ -50,47 +49,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.READ_EXTERNAL_STORAGE},
                 42609);
 
-
-        Globals.android_id = Long.parseLong(Secure.getString(MainActivity.this.getContentResolver(),
-                Secure.ANDROID_ID).substring(0, 14), 16);
-        Globals.sql = new SQL(Globals.android_id, MainActivity.this);
-
         Globals.CClient = new ConnectionClient();
         Globals.CClient.setContext(MainActivity.this);
-
-
-
-
-        ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
-        for (File s: files) {
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                File file = new File(Compress.inPath + '/' + s.getName());
-                is = new FileInputStream(s);
-                os = new FileOutputStream(file);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = is.read(buffer)) > 0) {
-                    os.write(buffer);
-                }
-                is.close();
-                os.close();
-            } catch (Exception e) {
-
-            }
-        }
-
-        File temp = new File(Compress.inPath);
-        System.out.println("About to brint doofus llooooook herereererererer");
-        for (File f: temp.listFiles()) {
-            System.out.println("hey");
-            System.out.println(f.getName());
-        }
-
-
-
-
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -185,20 +145,7 @@ public class MainActivity extends AppCompatActivity {
                         is.close();
                         os.close();
                     } catch (Exception e) {
-
                     }
-                    String name = getFileName(data.getData());
-                    File file = new File(Compress.inPath + '/' + name);
-                    byte[] bytesArray = new byte[(int) file.length()];
-                    try {
-                        FileInputStream fis = new FileInputStream(file);
-                        fis.read(bytesArray); //read file into bytes[]
-                        fis.close();
-                    } catch (Exception e) {
-
-                    }
-                    Globals.sql.insertFile(bytesArray);
-                    Compress.deleteFiles();
                 }
                 break;
         }

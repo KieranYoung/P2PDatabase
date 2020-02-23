@@ -32,7 +32,6 @@ public class Recv extends AppCompatActivity {
 
         returnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-
                 //head back to title screen of game
                 Recv.this.finish();
             }
@@ -43,7 +42,7 @@ public class Recv extends AppCompatActivity {
     public void onStart(){
         super.onStart();
 
-        ArrayList<File> filesFile = Globals.sql.getFiles(Globals.android_id);
+        File[] filesFile = new File(Compress.inPath).listFiles();
         for (File f: filesFile) {
             files.add(f.getName());
         }

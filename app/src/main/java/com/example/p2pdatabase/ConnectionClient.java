@@ -135,58 +135,18 @@ public class ConnectionClient {
 
 
     public void sendPayload(int i){
-
-        File[] fs = (new File(Compress.inPath).listFiles());
-        if(fs!=null) {
-            for(File f: fs) {
-                f.delete();
-            }
-        }
-
-        ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
-        for (File s: files) {
-            InputStream is = null;
-            OutputStream os = null;
-            try {
-                File file = new File(Compress.inPath + '/' + s.getName());
-                System.out.println(Compress.inPath + '/' + s.getName());
-                is = new FileInputStream(s);
-                os = new FileOutputStream(file);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = is.read(buffer)) > 0) {
-                    System.out.println(buffer);
-                    os.write(buffer);
-                }
-                is.close();
-                os.close();
-            } catch (Exception e) {
-
-            }
-        }
-
-        File temp = new File(Compress.inPath);
-        System.out.println("About to brint doofus llooooook herereererererer");
-        for (File f: temp.listFiles()) {
-            System.out.println("hey");
-            System.out.println(f.getName());
-        }
-
         Compress.zipAll();
-
-        File fileToSend = new File(Compress.outPath); // sets file to send as the zipped folder
-
-
+        File fileToSend = new File(Compress.outPath);
         try {
-            Payload filePayload = Payload.fromFile(fileToSend); //sets the payload to be the file
+            Payload filePayload = Payload.fromFile(fileToSend); // sets zip to send
             Nearby.getConnectionsClient(C).sendPayload(ConnectedEndpointIDs.get(i), filePayload); // sends the payload
-            fileToSend.delete();
+            fileToSend.delete(); // delete zip not needed anymore
             Toast toast = Toast.makeText(C, "Sent!", Toast.LENGTH_SHORT);
             toast.show();
-        } catch (FileNotFoundException e) {
-            Log.e("P2PDataBase", "File not found", e);
+        } catch (Exception e) {
         }
     }
+
     private final EndpointDiscoveryCallback mEndpointDiscoveryCallback =
             new EndpointDiscoveryCallback() {
                 @Override
@@ -215,24 +175,11 @@ public class ConnectionClient {
             toast.show();
 
             Payload.File f = payload.asFile();
-            File fnew = f.asJavaFile();
-            fnew.renameTo(new File(Compress.outPath + "/"+  fnew.getName()));
-            Compress.unzipAll();
-            fnew.delete();
+            File file = f.asJavaFile();
+            file.renameTo(new File(Compress.outPath)); // finish recieving file
+            Compress.unzipAll(); // unzip
+            file.delete(); // delete zip file
 
-            File[] fs = (new File(Compress.inPath).listFiles());
-            if(fs!=null) { //some JVMs return null for empty dirs
-                for(File fi: fs) {
-                    Globals.sql.insertFile(fi);
-                }
-            }
-
-            File[] fils = (new File(Compress.inPath).listFiles());
-            if(fils!=null) {
-                for(File fil: fils) {
-                    fil.delete();
-                }
-            }
             startAdvertise();
             startDiscovery();
         }
