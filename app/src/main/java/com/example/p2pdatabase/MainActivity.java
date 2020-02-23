@@ -155,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
 
                     }
+                    String name = getFileName(data.getData());
+                    File file = new File(Compress.inPath + '/' + name);
+                    Globals.sql.insertFile(file);
+                    Compress.deleteFiles();
                 }
                 break;
         }

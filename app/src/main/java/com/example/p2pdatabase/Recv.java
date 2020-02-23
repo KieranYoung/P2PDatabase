@@ -43,10 +43,9 @@ public class Recv extends AppCompatActivity {
     public void onStart(){
         super.onStart();
 
-        File dir = new File(Compress.inPath);
-        for (File f: dir.listFiles()) {
+        ArrayList<File> filesFile = Globals.sql.getFiles(Globals.android_id);
+        for (File f: filesFile) {
             files.add(f.getName());
-            System.out.println(f.getName());
         }
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Recv.this, android.R.layout.simple_list_item_1, files);
