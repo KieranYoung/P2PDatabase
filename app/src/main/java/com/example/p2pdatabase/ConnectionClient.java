@@ -163,6 +163,8 @@ public class ConnectionClient {
                     // We may want to make opponentList a list of key value pairs later
                     // (key = endpointId, value = discoveredEndpointInfo)
                     connect(endpointId);
+                    Toast toast = Toast.makeText(C, "Found Friend", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
                 @Override
@@ -214,13 +216,20 @@ public class ConnectionClient {
                     switch (result.getStatus().getStatusCode()) {
                         case ConnectionsStatusCodes.STATUS_OK:
                             ConnectedEndpointIDs.add(endpointId);
-                                sendPayload(ConnectedEndpointIDs.size()- 1);
+                            sendPayload(ConnectedEndpointIDs.size()- 1);
+
+                            Toast toast = Toast.makeText(C, "Connected to Friend", Toast.LENGTH_SHORT);
+                            toast.show();
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                             // The connection was rejected by one or both sides.
+                            Toast toast1 = Toast.makeText(C, "Rejected by Friend", Toast.LENGTH_SHORT);
+                            toast1.show();
                             break;
                         case ConnectionsStatusCodes.STATUS_ERROR:
                             // The connection broke before it was able to be accepted.
+                            Toast toast2 = Toast.makeText(C, "Error Friend", Toast.LENGTH_SHORT);
+                            toast2.show();
                             break;
                         default:
                             // Unknown status code
