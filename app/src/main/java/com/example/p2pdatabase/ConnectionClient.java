@@ -210,10 +210,10 @@ public class ConnectionClient {
         @Override
         public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
             String title = "Downloading FIle";
-            String content = "Progress: %" + (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes()+ 1);
+            String content = "Progress: %" + (int)(payloadTransferUpdate.getBytesTransferred()/(payloadTransferUpdate.getTotalBytes()+ 1));
             int priority = 5;
 
-            Intent newIntentService = NotificationService.updateProgressBarNotification((int)payloadTransferUpdate.getPayloadId(), title, content, priority, (int)(payloadTransferUpdate.getBytesTransferred()/payloadTransferUpdate.getTotalBytes() +1), C);
+            Intent newIntentService = NotificationService.updateProgressBarNotification((int)payloadTransferUpdate.getPayloadId(), title, content, priority, (int)(payloadTransferUpdate.getBytesTransferred()/(payloadTransferUpdate.getTotalBytes() +1)), C);
             C.startService(newIntentService);
 
         }
