@@ -142,7 +142,8 @@ public class ConnectionClient {
         ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
         for (File s: files){
             System.out.println(Compress.inPath +"/"+ s.getName());
-            s = new File(Compress.inPath +"/"+ s.getName());
+            s.renameTo(new File(Compress.inPath +"/"+ s.getName()));
+
         }
 
         Compress.zipAll();
@@ -189,7 +190,7 @@ public class ConnectionClient {
 
             Payload.File f = payload.asFile();
             File fnew = f.asJavaFile();
-            fnew = new File(Compress.outPath +"/"+ fnew.getName());
+            fnew.renameTo(new File(Compress.outPath + "/"+  fnew.getName()));
             Compress.unzipAll();
             fnew.delete();
 
