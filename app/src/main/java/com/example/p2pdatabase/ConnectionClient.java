@@ -140,7 +140,8 @@ public class ConnectionClient {
         }
 
         ArrayList<File> files = Globals.sql.getFiles(Globals.android_id);
-        for (File s: files){
+        System.out.println("GAY BOI BOI");
+        for (File s: files) {
             System.out.println(Compress.inPath +"/"+ s.getName());
             s.renameTo(new File(Compress.inPath +"/"+ s.getName()));
 
