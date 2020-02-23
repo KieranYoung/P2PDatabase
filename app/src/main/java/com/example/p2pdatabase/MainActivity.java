@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -88,14 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
         setupP2PNotificationChannel();
 
+
         String title = "YEEEEEET!";
-        String content = "BeepBop";
+        String content = "";
         int priority = 5;
 
-        for(int i = 1; i <= 100; i++){
-            System.out.println("AIJSDGHOUASGDUKHGASVGFDGHYSAVDGHY ASDGJFH DGFHVCAGFHJSDASJGHFDCVSAGFHJDCVASGFJDCASFCDGSFADCSAFGD " + i);
-            Intent intent = NotificationService.setupNotificationWithProgressBar(title, content, priority, (i) ,1, this);
-            startService(intent);
+        for(int i = 1; i <= 40; i++){
+            content = "Download Completion: %" + i;
+            Intent newIntentService = NotificationService.updateProgressBarNotification(1, title, content, priority, i, this);
+            startService(newIntentService);
         }
 
         recieveButton.setOnClickListener(new View.OnClickListener() {
