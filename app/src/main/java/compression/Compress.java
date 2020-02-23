@@ -24,6 +24,7 @@ public class Compress {
 
     public static final String inPath = SDPath + folder + files;
     public static final String outPath = SDPath + folder + zip;
+    public static final String topPath = SDPath + folder;
 
     private static final int BUFFER = Integer.MAX_VALUE;
 

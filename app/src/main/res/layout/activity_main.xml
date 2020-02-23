@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/untitled"
+    android:background="@drawable/titlescreen"
     tools:context=".MainActivity">
 
 
@@ -40,7 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:text="@string/recvString"
-        android:background = "@drawable/roundedbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

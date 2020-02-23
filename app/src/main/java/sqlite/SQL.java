@@ -3,8 +3,8 @@ package sqlite;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
@@ -117,9 +117,12 @@ public class SQL {
         values.put(Schema.Entry.ANDROID_ID, android_id);
         values.put(Schema.Entry.DATE, getDate());
         values.put(Schema.Entry.FILE, objectToByteArray(file));
-
-        long newRowId = db.insert(Schema.Entry.TABLE_NAME, null, values);
-
+        long newRowId = -1;
+        try {
+            newRowId = db.insert(Schema.Entry.TABLE_NAME, null, values);
+        } catch (SQLiteConstraintException e) {
+            e.printStackTrace();
+        }
         return newRowId != -1;
     }
 
@@ -139,7 +142,6 @@ public class SQL {
         SQLiteDatabase db = getReadDb();
 
         String[] projection = {
-                BaseColumns._ID,
                 Schema.Entry.ANDROID_ID,
                 Schema.Entry.DATE,
                 Schema.Entry.FILE

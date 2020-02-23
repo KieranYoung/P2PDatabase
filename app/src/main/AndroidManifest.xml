@@ -27,7 +27,13 @@
         android:name="android.permission.WRITE_INTERNAL_STORAGE"
         android:required="true" />
     <uses-permission
+        android:name="android.permission.READ_INTERNAL_STORAGE"
+        android:required="true" />
+    <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:required="true" />
 
     <application
@@ -37,6 +43,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Sender"></activity>
+        <activity android:name=".Recv" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -46,9 +54,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NotificationService" ></service>
-        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NearbyServiceSend" ></service>
-        <service android:name="com.example.p2pdatabase.com.example.p2pdatabase.services.NearbyServiceReceive" ></service>
+
+        <service android:name=".com.example.p2pdatabase.services.NotificationService" />
+        <service android:name=".com.example.p2pdatabase.services.NearbyServiceSend" />
+        <service android:name=".com.example.p2pdatabase.services.NearbyServiceReceive" />
     </application>
 
 </manifest>
