@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         is = getContentResolver().openInputStream(data.getData());
                         String name = getFileName(data.getData());
-                        System.out.println(Compress.inPath + name);
                         File file = new File(Compress.inPath + '/' + name);
                         os = new FileOutputStream(file);
                         byte[] buffer = new byte[1024];
